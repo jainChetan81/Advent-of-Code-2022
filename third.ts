@@ -65,6 +65,31 @@ for (let i = 0; i < ruksacks.length; i++) {
   sum += value;
 }
 console.log("sum", sum);
+sum = 0;
+for (let i = 0; i < ruksacks.length; i++) {
+	const e1 = ruksacks[i];
+	const e2 = ruksacks[i + 1];
+	const e3 = ruksacks[i + 2];
+	const matchingELement = findMatchingCharInThreeStrings(e1, e2, e3);
+	const value = alphabetValues[matchingELement];
+	sum += value;
+	i = i + 2;
+}
+
+console.log("sum", sum);
+
+function findMatchingCharInThreeStrings(str1: string, str2: string, str3: string): string {
+	let result = "";
+	for (let i = 0; i < str1.length; i++) {
+		const element = str1[i];
+		if (str2.includes(element) && str3.includes(element)) {
+			return element;
+		}
+	}
+	return result;
+}
+
+
 function findMatchingTextInTwoStrings(firstHalf: string, secondHalf: string): string {
   let result = "";
   for (let i = 0; i < firstHalf.length; i++) {
