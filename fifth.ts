@@ -19,17 +19,21 @@ input1.map((element, index) => {
 	tempStackMap[index] = array;
 });
 
+printTree(tempStackMap);
+console.log("print rotated tree");
 const stackMap: string[][] = [];
 
 for (let i = 0; i < 9; i++) {
 	const tempArray: string[] = [];
-	for (let j = 0; j < tempStackMap.length; j++) {
-		tempArray.unshift(tempStackMap[j][i]);
+	for (let j = 0; j < 9; j++) {
+		// console.log("i: ", i, " j: ", j, " length: ", tempStackMap.length, " j length: ", tempStackMap[j]);
+		const element = tempStackMap[j] ? tempStackMap[j][i] : "";
+		tempArray.unshift(element ?? "");
 	}
-	stackMap[i] = tempArray;
+	tempArray.shift();
+	stackMap[i] = [...tempArray];
 }
-
-printTree();
+printTree(stackMap);
 // it is the array of moves, each move is an object with key as the numbers of boxes to move and value as the array of [to, from] positions
 const moveList: Record<number, number[]>[] = [];
 input2.map((element, index) => {
@@ -42,13 +46,18 @@ input2.map((element, index) => {
 	moveList[index] = { [numberToMove]: [to, from] };
 });
 
+// moveList.map((element) => {
+// 	const [numberToMove, [from, to]] = Object.entries(element)[0];
+// 	moveTheBoxes(+numberToMove, to, from);
+// });
+// for part 2
 moveList.map((element) => {
-	const [numberToMove, [to, from]] = Object.entries(element)[0];
-	moveTheBoxes(+numberToMove, to, from);
+	const [numberToMove, [from, to]] = Object.entries(element)[0];
+	moveTheBoxes2(+numberToMove, to, from);
 });
-// const [numberToMove, [to, from]] = Object.entries(moveList[1])[0];
-printTree();
-findTopElementOfTree();
+// const [numberToMove, [from, to]] = Object.entries(moveList[0])[0];
+// moveTheBoxes2(+numberToMove, to, from);
+printTree(stackMap);
 
 function moveTheBoxes(numberToMove: number, to: number, from: number) {
 	// find the top element in the "from" column
@@ -56,11 +65,10 @@ function moveTheBoxes(numberToMove: number, to: number, from: number) {
 	// find empty space in the "to" column
 	// add the element to that column at that index
 	// do all the above steps for the number of boxes to move
-
-	console.log(numberToMove, to, from);
+	if (isNaN(numberToMove) || isNaN(to) || isNaN(from)) return;
+	// console.log("Moving ", numberToMove, " boxes from ", from, " to ", to);
 	for (let i = 0; i < numberToMove; i++) {
 		const box = findTopElementInColumn(from);
-		console.log("box", box);
 		if (box && box.length > 0) {
 			addElementToColumn(to, box);
 		}
@@ -68,7 +76,6 @@ function moveTheBoxes(numberToMove: number, to: number, from: number) {
 }
 
 function findTopElementInColumn(from: number): string {
-	let topElement = "";
 	const stackArray = stackMap[from - 1];
 	for (let i = stackArray.length - 1; i >= 0; i--) {
 		const element = stackArray[i];
@@ -78,11 +85,12 @@ function findTopElementInColumn(from: number): string {
 			return element;
 		}
 	}
-	return topElement;
+	return "";
 }
 
 function addElementToColumn(to: number, replaceBox: string) {
 	const stackArray = stackMap[to - 1];
+	if (!replaceBox || typeof replaceBox !== "string") return;
 	for (let i = 0; i < stackArray.length; i++) {
 		const element = stackArray[i];
 		if (element === "") {
@@ -93,19 +101,56 @@ function addElementToColumn(to: number, replaceBox: string) {
 	stackArray.push(replaceBox);
 }
 
-function findTopElementOfTree() {
-	const topElements: string[] = [];
-	for (let i = stackMap.length - 1; i >= 0; i--) {
-		const topElement: string = stackMap[i].filter(Boolean).reverse()[0];
-		topElements.push(topElement);
-	}
-	console.log(topElements.reverse());
-}
-
-function printTree() {
+function printTree(stackMap: string[][]) {
+	const temp = [...stackMap];
 	console.log("Printing Tree \n");
-	stackMap.map((element) => {
+	temp.map((element) => {
 		console.log(element);
 	});
 }
-// HTCSGCVM
+
+// part two
+
+function moveTheBoxes2(numberToMove: number, to: number, from: number) {
+	// find the top element sin the "from" column
+	// remove those element array from that column
+	// find empty spaces in the "to" column
+	// add the element ARRAY to that column at that index
+	// do all the above steps for the number of boxes to move
+	if (isNaN(numberToMove) || isNaN(to) || isNaN(from)) return;
+	// for (let i = 0; i < numberToMove; i++) {
+	console.log("Moving ", numberToMove, " boxes from ", from, " to ", to);
+	const box = findTopElementInColumn2(from, numberToMove);
+	if (box && box.length > 0) {
+		console.log("box", box);
+		for (let i = 0; i < numberToMove; i++) {
+			addElementToColumn2(to, box[i]);
+		}
+	}
+	// }
+}
+function findTopElementInColumn2(from: number, numberToMove: number): string[] {
+	const stackArray = stackMap[from - 1];
+	const elements: string[] = [];
+	for (let i = stackArray.length - 1; i >= 0; i--) {
+		const element = stackArray[i];
+		if (element !== "") {
+			stackArray[i] = "";
+			stackMap[from - 1] = [...stackArray];
+			elements.unshift(element);
+			if (elements.length === numberToMove) return elements;
+		}
+	}
+	return elements;
+}
+function addElementToColumn2(to: number, replaceBox: string) {
+	const stackArray = stackMap[to - 1];
+	for (let i = 0; i < stackArray.length; i++) {
+		const element = stackArray[i];
+		if (element === "") {
+			stackArray[i] = replaceBox;
+			return;
+		}
+	}
+	stackArray.push(replaceBox);
+}
