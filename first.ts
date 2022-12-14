@@ -16,9 +16,7 @@ for (let i = 0; i < calories.length; i++) {
 		calorieMap.set(calorieMap.size + 1, tempTotal);
 		tempTotal = 0;
 	}
-	// console.log(tempTotal);
 }
-// console.log(calorieMap);
 const firstHighest = findHighestValueOfMao(calorieMap);
 console.log(firstHighest);
 calorieMap.delete(firstHighest.highestELfIndex);

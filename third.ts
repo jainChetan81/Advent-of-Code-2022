@@ -53,6 +53,7 @@ const alphabetValues = {
   Z: 52,
 };
 export const a = "";
+// @ts-expect-error Deno not found
 const result = await Deno.readTextFile("third.txt");
 const ruksacks = result.split("\n");
 let sum = 0;
@@ -80,9 +81,23 @@ console.log("sum", sum);
 
 function findMatchingCharInThreeStrings(str1: string, str2: string, str3: string): string {
 	let result = "";
+  const ob1: Record<string, boolean> = {};
 	for (let i = 0; i < str1.length; i++) {
 		const element = str1[i];
-		if (str2.includes(element) && str3.includes(element)) {
+		if (!ob1[element]) {
+			ob1[element] = true;
+		}
+	}
+	const ob2: Record<string, boolean> = {};
+	for (let i = 0; i < str2.length; i++) {
+		const element = str2[i];
+		if (!ob2[element]) {
+			ob2[element] = true;
+		}
+	}
+	for (let i = 0; i < str3.length; i++) {
+		const element = str3[i];
+		if (ob1[element] && ob2[element]) {
 			return element;
 		}
 	}
