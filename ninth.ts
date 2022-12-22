@@ -2,7 +2,6 @@
 export const a = "";
 // @ts-expect-error Deno not found
 const input = await Deno.readTextFile("ninth.txt").then((e) => e.split("\n"));
-// const input: string[] = readFileSync("ninth-test-2.txt", "utf8").split("\n"); //6271
 // const input: string[] = readFileSync("ninth.txt", "utf8").split("\n");
 // this map will store the position of the tail
 // key will be the [x,y] position of the 2d Matrix
