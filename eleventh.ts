@@ -4,10 +4,9 @@ import { readFileSync } from "fs";
 const input: string[] = readFileSync("eleventh-test.txt", "utf8").split("\n\n");
 type OPERATIONS = "+" | "-" | "*" | "/";
 type NUMBER_IN_STRING = `${number}` | "old";
-// console.log(input);
 
 const monkeysWithWorries: Record<number, number[]> = {};
-[1].map(() => {
+[1, 2].forEach(() => {
 	for (let i = 0; i < input.length; i++) {
 		const round = input[i].split("\n").slice(1);
 		const startingItems = round[0]
